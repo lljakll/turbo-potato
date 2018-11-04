@@ -34,8 +34,7 @@ void deleteNode(struct Node **head_node, struct Node *del_node) {
 }
 
 //inserting node at beginning of list
-void push(struct Node** head_node, int new_data)
-{
+void push(struct Node** head_node, int new_data) {
 	//allocating node
 	struct Node* new_node =
 		(struct Node*) malloc(sizeof(struct Node));
@@ -57,17 +56,15 @@ void push(struct Node** head_node, int new_data)
 	(*head_node) = new_node;
 }
 
-void printList(struct Node *node)
-{
-	while (node != NULL)
-	{
+void printList(struct Node *node) {
+	while (node != NULL) {
 		printf("%d ", node->data);
 		node = node->next;
 	}
 }
 
-int main()
-{
+int main() {
+	
 	//empty list
 	struct Node* head = NULL;
 
