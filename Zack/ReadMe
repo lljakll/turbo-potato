@@ -1,1 +1,11 @@
-test
+## This is a CLC Assignment.
+
+In your group, implement the following for a singly linked list, a doubly linked list, and a circular linked list.
+
+Remove the ith node
+Insert a given object right after the ith node
+Append on list to another (destructively)
+Make a copy of a list
+Reverse a list
+The instructor will select a list for each student to present. Be sure that everyone in your group is prepared to present all lists.
+You are not required to submit this assignment to LopesWrite.
