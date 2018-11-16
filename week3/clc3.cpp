@@ -1,4 +1,11 @@
-//In your group, propose one hash function for the numbers in the data on page 577 (the number is the key – index in the hash table array – and the name and number are the data). Define a hash table with 11 entries, and describe a linear method for handling collisions between indexes when inserting data in the table. Demonstrate that the hashing function works and collisions are handled, by storing and retrieving data from the hash table using the key as the position of a data item in the table.
+//In your group, propose one hash function for the numbers in the data on page
+//577 (the number is the key – index in the hash table array – and the name and
+//number are the data). Define a hash table with 11 entries, and describe a
+//linear method for handling collisions between indexes when inserting data in
+//the table. Demonstrate that the hashing function works and collisions are
+//handled, by storing and retrieving data from the hash table using the key as
+//the position of a data item in the table
+
 
 #include <iostream>
 #include <string>
