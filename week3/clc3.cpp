@@ -6,6 +6,7 @@
 //handled, by storing and retrieving data from the hash table using the key as
 //the position of a data item in the table
 
+// Compile using g++ on a linux box
 
 #include <iostream>
 #include <string>
