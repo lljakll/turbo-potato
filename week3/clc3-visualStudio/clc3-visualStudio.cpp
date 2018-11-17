@@ -149,7 +149,9 @@ int main() {
 	testItem.PrintTable();
 
 	// Find a number
-	testItem.FindByNumber("987-1122");
+	cout << endl << endl << "Finding the name associated with 987-1122: " << testItem.FindByNumber("987-1122");
+
+
 
 	return 0;
 }
