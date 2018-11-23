@@ -7,198 +7,214 @@
 
 
 #include "pch.h"
-#include "BinaryTree.h"
 #include <iostream>
+#include <cstdlib>
 
-BinaryTree::BinaryTree()
+class BinaryTree
 {
-	root = NULL;
-}
+private:
 
-// Helper functions
-BinaryTree::node* BinaryTree::CreateLeafPrivate(int key)
-{
-	node* temp = new node;
-	temp->key = key;
-	temp->left = NULL;
-	temp->right = NULL;
-
-	return temp;
-}
-int BinaryTree::MaxLevelPrivate(node* ptr)
-{
-	if (ptr == NULL)
+	struct node
 	{
-		return 0;
+		int key;
+		node* left;
+		node* right;
+	};
+
+	node *root;
+
+	// Helper functions
+	node* CreateLeafPrivate(int key)
+	{ // Returns a new node with the passed key as the nodes key
+		node* temp = new node;
+		temp->key = key;
+		temp->left = NULL;
+		temp->right = NULL;
+
+		return temp;
 	}
-	else
-	{
-		if (MaxLevelPrivate(ptr->left) > MaxLevelPrivate(ptr->right))
+	int DeepestLevelPrivate(node* ptr)
+	{ // helper function to recursively find the deepest level so HeightOfTree function can determin its value
+		if (ptr == NULL)
 		{
-			return 1 + MaxLevelPrivate(ptr->left);
+			return 0;
 		}
 		else
 		{
-			return 1 + MaxLevelPrivate(ptr->right);
+			if (DeepestLevelPrivate(ptr->left) > DeepestLevelPrivate(ptr->right)) // check if left i deeper than right
+			{
+				return 1 + DeepestLevelPrivate(ptr->left); // if yes, keep recursively check left again and add 1
+			}
+			else
+			{
+				return 1 + DeepestLevelPrivate(ptr->right); // if no, go down the right adding 1
+			}
 		}
 	}
-}
 
-// Add leafs
-void BinaryTree::AddLeaf(int key)
-{
-	AddLeafPrivate(key, root);
-}
-void BinaryTree::AddLeafPrivate(int key, node* ptr)
-{
-	if (root == NULL)
+	// Add leafs
+	void AddLeafPrivate(int key, node* ptr)
 	{
-		root = CreateLeafPrivate(key);
-	}
-	else if (key < ptr->key)
-	{
-		if (ptr->left != NULL)
+		if (root == NULL)
 		{
-			AddLeafPrivate(key, ptr->left);
+			root = CreateLeafPrivate(key);
+		}
+		else if (key < ptr->key)
+		{
+			if (ptr->left != NULL)
+			{
+				AddLeafPrivate(key, ptr->left);
+			}
+			else
+			{
+				ptr->left = CreateLeafPrivate(key);
+			}
+		}
+		else if (key > ptr->key)
+		{
+			if (ptr->right != NULL)
+			{
+				AddLeafPrivate(key, ptr->right);
+			}
+			else
+			{
+				ptr->right = CreateLeafPrivate(key);
+			}
+		}
+	}
+
+	// a.to count the number of nodes in a binary tree
+	int NodeCountPrivate(node* ptr)
+	{
+		int count = 1;
+		if (ptr == NULL)
+		{
+			return 0;
 		}
 		else
 		{
-			ptr->left = CreateLeafPrivate(key);
+			count += NodeCountPrivate(ptr->left); // increment count recursively
+			count += NodeCountPrivate(ptr->right);
 		}
+		return count;
 	}
-	else if (key > ptr->key)
+
+	// b.to count the number of leaves
+	int LeafCountPrivate(node*ptr)
 	{
-		if (ptr->right != NULL)
+		if (ptr == NULL)
 		{
-			AddLeafPrivate(key, ptr->right);
+			return 0;
+		}
+		if (ptr->left == NULL && ptr->right == NULL) // check for no children
+		{
+			return 1;
 		}
 		else
 		{
-			ptr->right = CreateLeafPrivate(key);
+			return LeafCountPrivate(ptr->left) + LeafCountPrivate(ptr->right); // add recursively counted null lefts and rights
 		}
 	}
-}
 
-// a.to count the number of nodes in a binary tree
-int BinaryTree::NodeCount()
-{
-	return NodeCountPrivate(root);
-}
-int BinaryTree::NodeCountPrivate(node* ptr)
-{
-	int count = 1;
-	if (ptr == NULL)
+	// c.to count the number of right children
+	int RightChildCountPrivate(node* ptr)
 	{
-		return 0;
-	}
-	else
-	{
-		count += NodeCountPrivate(ptr->left);
-		count += NodeCountPrivate(ptr->right);
-	}
-	return count;
-}
-
-// b.to count the number of leaves
-int BinaryTree::LeafCount()
-{
-	return LeafCountPrivate(root);
-}
-int BinaryTree::LeafCountPrivate(node*ptr)
-{
-	if (ptr == NULL)
-	{
-		return 0;
-	}
-	if (ptr->left == NULL && ptr->right == NULL)
-	{
-		return 1;
-	}
-	else
-	{
-		return LeafCountPrivate(ptr->left) + LeafCountPrivate(ptr->right);
-	}
-}
-// c.to count the number of right children
-int BinaryTree::RightChildCount()
-{
-	return RightChildCountPrivate(root);
-}
-int BinaryTree::RightChildCountPrivate(node* ptr)
-{
-	if (ptr == NULL)
-	{
-		return 0;
-	}
-	int numLeftNode = 0;
-	int numRightNode = 0;
-	if (ptr->left != NULL)
-	{
-		numLeftNode = RightChildCountPrivate(ptr->left);
-	}
-	if (ptr->right != NULL)
-	{
-		numRightNode = RightChildCountPrivate(ptr->right) + 1;
-	}
-	return numLeftNode + numRightNode;
-}
-
-// d.to find the height of the tree
-int BinaryTree::HeightOfTree()
-{
-	return HeightOfTreePrivate(root);
-}
-int BinaryTree::HeightOfTreePrivate(node* ptr)
-{
-	int height = 0;
-	height = MaxLevelPrivate(ptr) - 1;
-	return height;
-}
-
-// e.to delete all leaves from a binary tree
-void BinaryTree::DeleteAllLeaves()
-{
-	DeleteAllLeavesPrivate(root);
-}
-BinaryTree::node* BinaryTree::DeleteAllLeavesPrivate(node* ptr)
-{
-	if (ptr != NULL)
-	{
-		if (ptr->left == NULL && ptr->right == NULL)
+		if (ptr == NULL)
 		{
-			free(ptr);
-			return NULL;
+			return 0;
+		}
+		int numLeftNode = 0;
+		int numRightNode = 0;
+		if (ptr->left != NULL) // check right children on the left branches
+		{
+			numLeftNode = RightChildCountPrivate(ptr->left); // increment by 1 recursively
+		}
+		if (ptr->right != NULL) // check right children of the right branches
+		{
+			numRightNode = RightChildCountPrivate(ptr->right) + 1; // increment by 1 recursively
+		}
+		return numLeftNode + numRightNode;  // add them together
+	}
+
+	// d.to find the height of the tree
+	int HeightOfTreePrivate(node* ptr)
+	{
+		int height = 0;
+		height = DeepestLevelPrivate(ptr) - 1;
+		return height;
+	}
+
+	// e.to delete all leaves from a binary tree
+	node* DeleteAllLeavesPrivate(node* ptr)
+	{
+		if (ptr != NULL)
+		{
+			if (ptr->left == NULL && ptr->right == NULL)  // if is a leaf
+			{
+				free(ptr); // delete it
+				return NULL;
+			}
+			else
+			{
+				ptr->left = DeleteAllLeavesPrivate(ptr->left); // recursively move down the left sides
+				ptr->right = DeleteAllLeavesPrivate(ptr->right); // recursively move down the right sides
+			}
+		}
+		return ptr;
+	}
+
+	// Print Nodes in order
+	void PrintInOrderPrivate(node* ptr)
+	{
+		if (root != NULL)
+		{
+			if (ptr->left != NULL)
+			{
+				PrintInOrderPrivate(ptr->left);
+			}
+			std::cout << ptr->key << " ";
+			if (ptr->right != NULL)
+			{
+				PrintInOrderPrivate(ptr->right);
+			}
 		}
 		else
 		{
-			ptr->left = DeleteAllLeavesPrivate(ptr->left);
-			ptr->right = DeleteAllLeavesPrivate(ptr->right);
+			std::cout << "The Tree is empty.";
 		}
 	}
-	return ptr;
-}
 
-// Print Nodes in order
-void BinaryTree::PrintInOrder()
-{
-	PrintInOrderPrivate(root);
-}
-void BinaryTree::PrintInOrderPrivate(node* ptr)
-{
-	if (root != NULL)
+public:
+	BinaryTree()
 	{
-		if (ptr->left != NULL)
-		{
-			PrintInOrderPrivate(ptr->left);
-		}
-		std::cout << ptr->key << " ";
-		if (ptr->right != NULL)
-		{
-			PrintInOrderPrivate(ptr->right);
-		}
+		root = NULL;
 	}
-	else
+	void AddLeaf(int key)
 	{
-		std::cout << "The Tree is empty.";
+		AddLeafPrivate(key, root);
 	}
-}
+	int NodeCount()
+	{
+		return NodeCountPrivate(root);
+	}
+	int LeafCount()
+	{
+		return LeafCountPrivate(root);
+	}
+	int RightChildCount()
+	{
+		return RightChildCountPrivate(root);
+	}
+	int HeightOfTree()
+	{
+		return HeightOfTreePrivate(root);
+	}
+	void DeleteAllLeaves()
+	{
+		DeleteAllLeavesPrivate(root);
+	}
+	void PrintInOrder()
+	{
+		PrintInOrderPrivate(root);
+	}
+};
