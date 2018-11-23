@@ -8,34 +8,52 @@
 
 #include "pch.h"
 #include "BinaryTree.h"
-
 #include <iostream>
-
-
 
 BinaryTree::BinaryTree()
 {
 	root = NULL;
 }
 
-BinaryTree::node* BinaryTree::CreateLeaf(int key)
+// Helper functions
+BinaryTree::node* BinaryTree::CreateLeafPrivate(int key)
 {
 	node* temp = new node;
 	temp->key = key;
 	temp->left = NULL;
 	temp->right = NULL;
+
+	return temp;
+}
+int BinaryTree::MaxLevelPrivate(node* ptr)
+{
+	if (ptr == NULL)
+	{
+		return 0;
+	}
+	else
+	{
+		if (MaxLevelPrivate(ptr->left) > MaxLevelPrivate(ptr->right))
+		{
+			return 1 + MaxLevelPrivate(ptr->left);
+		}
+		else
+		{
+			return 1 + MaxLevelPrivate(ptr->right);
+		}
+	}
 }
 
+// Add leafs
 void BinaryTree::AddLeaf(int key)
 {
 	AddLeafPrivate(key, root);
 }
-
 void BinaryTree::AddLeafPrivate(int key, node* ptr)
 {
 	if (root == NULL)
 	{
-		root = CreateLeaf(key);
+		root = CreateLeafPrivate(key);
 	}
 	else if (key < ptr->key)
 	{
@@ -45,7 +63,7 @@ void BinaryTree::AddLeafPrivate(int key, node* ptr)
 		}
 		else
 		{
-			ptr->left = CreateLeaf(key);
+			ptr->left = CreateLeafPrivate(key);
 		}
 	}
 	else if (key > ptr->key)
@@ -56,18 +74,17 @@ void BinaryTree::AddLeafPrivate(int key, node* ptr)
 		}
 		else
 		{
-			ptr->right = CreateLeaf(key);
+			ptr->right = CreateLeafPrivate(key);
 		}
 	}
 }
 
-int BinaryTree::MaxLevel(node* ptr)
-{
-	if (ptr)
-}
-
 // a.to count the number of nodes in a binary tree
-int BinaryTree::NodeCount(node* ptr)
+int BinaryTree::NodeCount()
+{
+	return NodeCountPrivate(root);
+}
+int BinaryTree::NodeCountPrivate(node* ptr)
 {
 	int count = 1;
 	if (ptr == NULL)
@@ -76,14 +93,18 @@ int BinaryTree::NodeCount(node* ptr)
 	}
 	else
 	{
-		count += NodeCount(ptr->left);
-		count += NodeCount(ptr->right);
+		count += NodeCountPrivate(ptr->left);
+		count += NodeCountPrivate(ptr->right);
 	}
 	return count;
 }
 
 // b.to count the number of leaves
-int BinaryTree::LeafCount(node*ptr)
+int BinaryTree::LeafCount()
+{
+	return LeafCountPrivate(root);
+}
+int BinaryTree::LeafCountPrivate(node*ptr)
 {
 	if (ptr == NULL)
 	{
@@ -95,12 +116,15 @@ int BinaryTree::LeafCount(node*ptr)
 	}
 	else
 	{
-		return LeafCount(ptr->left) + LeafCount(ptr->right);
+		return LeafCountPrivate(ptr->left) + LeafCountPrivate(ptr->right);
 	}
 }
-
 // c.to count the number of right children
-int BinaryTree::RightChildCount(node* ptr)
+int BinaryTree::RightChildCount()
+{
+	return RightChildCountPrivate(root);
+}
+int BinaryTree::RightChildCountPrivate(node* ptr)
 {
 	if (ptr == NULL)
 	{
@@ -110,13 +134,71 @@ int BinaryTree::RightChildCount(node* ptr)
 	int numRightNode = 0;
 	if (ptr->left != NULL)
 	{
-		numLeftNode = RightChildCount(ptr->left);
+		numLeftNode = RightChildCountPrivate(ptr->left);
 	}
 	if (ptr->right != NULL)
 	{
-		numRightNode = RightChildCount(ptr->right) + 1;
+		numRightNode = RightChildCountPrivate(ptr->right) + 1;
 	}
 	return numLeftNode + numRightNode;
 }
 
 // d.to find the height of the tree
+int BinaryTree::HeightOfTree()
+{
+	return HeightOfTreePrivate(root);
+}
+int BinaryTree::HeightOfTreePrivate(node* ptr)
+{
+	int height = 0;
+	height = MaxLevelPrivate(ptr) - 1;
+	return height;
+}
+
+// e.to delete all leaves from a binary tree
+void BinaryTree::DeleteAllLeaves()
+{
+	DeleteAllLeavesPrivate(root);
+}
+BinaryTree::node* BinaryTree::DeleteAllLeavesPrivate(node* ptr)
+{
+	if (ptr != NULL)
+	{
+		if (ptr->left == NULL && ptr->right == NULL)
+		{
+			free(ptr);
+			return NULL;
+		}
+		else
+		{
+			ptr->left = DeleteAllLeavesPrivate(ptr->left);
+			ptr->right = DeleteAllLeavesPrivate(ptr->right);
+		}
+	}
+	return ptr;
+}
+
+// Print Nodes in order
+void BinaryTree::PrintInOrder()
+{
+	PrintInOrderPrivate(root);
+}
+void BinaryTree::PrintInOrderPrivate(node* ptr)
+{
+	if (root != NULL)
+	{
+		if (ptr->left != NULL)
+		{
+			PrintInOrderPrivate(ptr->left);
+		}
+		std::cout << ptr->key << " ";
+		if (ptr->right != NULL)
+		{
+			PrintInOrderPrivate(ptr->right);
+		}
+	}
+	else
+	{
+		std::cout << "The Tree is empty.";
+	}
+}
