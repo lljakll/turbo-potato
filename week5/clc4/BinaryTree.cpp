@@ -1,3 +1,12 @@
+// CST - 201
+// 24 November 2018
+// Green Group
+// Jackie Adair
+// Zachary Chambers
+// Dylan Dorn
+// This is our original work
+
+
 // 6.14. 2. Write functions 
 // a.to count the number of nodes in a binary tree
 // b.to count the number of leaves
@@ -100,7 +109,7 @@ private:
 	}
 
 	// b.to count the number of leaves
-	int LeafCountPrivate(node*ptr)
+	int LeafCountPrivate(node* ptr)
 	{
 		if (ptr == NULL)
 		{
@@ -127,7 +136,7 @@ private:
 		int numRightNode = 0;
 		if (ptr->left != NULL) // check right children on the left branches
 		{
-			numLeftNode = RightChildCountPrivate(ptr->left); // increment by 1 recursively
+			numLeftNode = RightChildCountPrivate(ptr->left); // traverse down the left side to look at right nodes.
 		}
 		if (ptr->right != NULL) // check right children of the right branches
 		{
