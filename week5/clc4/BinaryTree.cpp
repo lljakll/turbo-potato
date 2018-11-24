@@ -163,27 +163,6 @@ private:
 		return ptr;
 	}
 
-	// Print Nodes in order
-	void PrintInOrderPrivate(node* ptr)
-	{
-		if (root != NULL)
-		{
-			if (ptr->left != NULL)
-			{
-				PrintInOrderPrivate(ptr->left);
-			}
-			std::cout << ptr->key << " ";
-			if (ptr->right != NULL)
-			{
-				PrintInOrderPrivate(ptr->right);
-			}
-		}
-		else
-		{
-			std::cout << "The Tree is empty.";
-		}
-	}
-
 public:
 	BinaryTree()
 	{
@@ -213,8 +192,5 @@ public:
 	{
 		DeleteAllLeavesPrivate(root);
 	}
-	void PrintInOrder()
-	{
-		PrintInOrderPrivate(root);
-	}
+
 };

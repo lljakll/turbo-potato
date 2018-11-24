@@ -21,15 +21,13 @@ int main()
 	BinaryTree myTree;
 
 	cout << "The tree currently has: " << myTree.NodeCount() << " nodes." << endl;
-
+	cout << "Adding 16 values to the tree..." << endl;
 	for (int i = 0; i < 16; i++)
 	{
 		myTree.AddLeaf(TreeKeys[i]);
 	}
+	cout << "The tree now has: " << myTree.NodeCount() << " nodes." << endl;
 
-
-	cout << "Printing the Tree from smallest to largest: " << endl;
-	myTree.PrintInOrder();
 	cout << endl << endl;
 	cout << "a. Count the number of nodes.  The tree currently has: " << myTree.NodeCount() << " nodes." << endl;
 	cout << "b. Count the number of leaves.  The tree has: " << myTree.LeafCount() << " leaves." << endl;
